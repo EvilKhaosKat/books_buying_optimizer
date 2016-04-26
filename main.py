@@ -19,10 +19,6 @@ def create_books_list(books_decoded):
 
 books_json = get_books_json()
 
-
-print("books_json:%s" % books_json)
-
-
 books_json_decoded = json.loads(books_json)  # raw python objects: list of dicts
 books_list = create_books_list(books_json_decoded)
 
