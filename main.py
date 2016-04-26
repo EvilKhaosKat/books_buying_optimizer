@@ -1,10 +1,10 @@
 import itertools
 
-from Helper import get_books_list
+from Helper import _get_books_list
 
 BOUGHT_BOOKS_IN_ONE_PURCHASE = 3
 
-books_list = get_books_list()
+books_list = _get_books_list()
 
 print("books_list:%s" % books_list)
 

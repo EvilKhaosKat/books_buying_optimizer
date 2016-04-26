@@ -17,13 +17,13 @@ def get_books_cost_less_equals(books, cost):
     return filter(lambda book: book.cost <= cost, books)
 
 
-def get_books_json():
+def _get_books_json():
     with open("books.json") as f:
         return f.read()
 
 
-def get_books_list():
-    books_json = get_books_json()
+def _get_books_list():
+    books_json = _get_books_json()
     books_json_decoded = json.loads(books_json)  # raw python objects: list of dicts
 
     return create_books_list(books_json_decoded)
