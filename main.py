@@ -1,6 +1,10 @@
 import json
+import itertools
 
 from Book import Book
+
+
+BOUGHT_BOOKS_IN_ONE_PURCHASE = 3
 
 
 def get_books_json():
@@ -23,3 +27,7 @@ books_json_decoded = json.loads(books_json)  # raw python objects: list of dicts
 books_list = create_books_list(books_json_decoded)
 
 print("books_list:%s" % books_list)
+
+
+bought_books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
+print("bought_books_combinations:%s" % list(bought_books_combinations))
