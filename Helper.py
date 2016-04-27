@@ -37,19 +37,17 @@ def get_books_list():
 
 
 def add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence):
-    print("purchase_sequences_top:%s" % purchase_sequences_top)
-    print("current_purchase_sequence:%s" % current_purchase_sequence)
+    purchase_sequence_obj = PurchaseSequence()
+    purchase_sequence_obj.purchases = current_purchase_sequence
 
-    current_cost = current_purchase_sequence.get_total_cost()
+    current_cost = purchase_sequence_obj.get_total_cost()
 
     top_costs = list(map(lambda purchase_sequence: purchase_sequence.get_total_cost(), purchase_sequences_top))
     max_top_cost = _get_max_top_cost(top_costs)
 
-    print("current_cost:%s" % current_cost)
-    print("max_top_cost:%s" % max_top_cost)
-
     if current_cost < max_top_cost:
-        purchase_sequences_top.append(current_purchase_sequence)
+        purchase_sequences_top.append(purchase_sequence_obj)
+        print("purchase_sequence_obj:%s" % purchase_sequence_obj)
 
 
 def _get_max_top_cost(top_costs):
@@ -65,11 +63,12 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
     if not purchase_sequences_top:
         purchase_sequences_top = []
     if not current_purchase_sequence:
-        current_purchase_sequence = PurchaseSequence()
+        current_purchase_sequence = []
 
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
         # print("add leftovers:%s" % books_list)
-        current_purchase_sequence.add_purchase(Purchase(bought_books=books_list[:]))
+        current_purchase_sequence.append(Purchase(bought_books=books_list[:]))
+
         add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
@@ -86,12 +85,12 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
                 other_books = leftovers_books[:]
                 other_books.remove(free_book)
 
-                current_purchase_sequence.add_purchase(purchase)
+                current_purchase_sequence.append(purchase)
 
                 purchase_sequences_top = \
                     get_purchase_variants(books_list=other_books,
                                           best_variants_count=best_variants_count,
-                                          current_purchase_sequence=copy.copy(current_purchase_sequence),
+                                          current_purchase_sequence=current_purchase_sequence,
                                           purchase_sequences_top=purchase_sequences_top)
 
     return purchase_sequences_top
