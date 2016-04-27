@@ -31,6 +31,9 @@ class Purchase:
     def get_minimum_cost(self):
         return min(self._get_books_costs())
 
+    def is_empty_purchase(self):
+        return len(self.bought_books) == 0 and not self.free_book
+
 
 class TestPurchase(unittest.TestCase):
     def _get_stub_books(self):

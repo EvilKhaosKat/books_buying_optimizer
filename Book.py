@@ -14,3 +14,6 @@ class Book:
 
     def __str__(self, *args, **kwargs):
         return self.__repr__()
+
+    def __hash__(self):
+        return hash(self.title) ^ hash(self.cost)
