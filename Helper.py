@@ -67,7 +67,7 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
         current_purchase_sequence = PurchaseSequence()
 
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
-        #print("add leftovers:%s" % books_list)
+        # print("add leftovers:%s" % books_list)
         current_purchase_sequence.add_purchase(Purchase(bought_books=books_list[:]))
         add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
     else:
@@ -88,9 +88,9 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
                 current_purchase_sequence.add_purchase(purchase)
 
                 purchase_sequences_top = get_purchase_variants(books_list=other_books,
-                                      best_variants_count=best_variants_count,
-                                      current_purchase_sequence=current_purchase_sequence,
-                                      purchase_sequences_top=purchase_sequences_top)
+                                                               best_variants_count=best_variants_count,
+                                                               current_purchase_sequence=current_purchase_sequence,
+                                                               purchase_sequences_top=purchase_sequences_top)
 
     return purchase_sequences_top
 
