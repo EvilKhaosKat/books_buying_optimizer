@@ -94,7 +94,7 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
                 purchase_sequences_top = \
                     get_purchase_variants(books_list=other_books,
                                           best_variants_count=best_variants_count,
-                                          current_purchase_sequence=current_purchase_sequence,
+                                          current_purchase_sequence=current_purchase_sequence[:],
                                           purchase_sequences_top=purchase_sequences_top)
 
     return purchase_sequences_top
