@@ -70,7 +70,6 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
         #print("add leftovers:%s" % books_list)
         current_purchase_sequence.add_purchase(Purchase(bought_books=books_list[:]))
         add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
-        print("purchase_sequences_top:%s" % purchase_sequences_top)
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
         for books_combination in books_combinations:  # check all books groups to buy combinations
