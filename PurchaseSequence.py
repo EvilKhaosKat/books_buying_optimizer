@@ -19,7 +19,7 @@ class PurchaseSequence:
         return sum(costs)
 
     def __repr__(self):  # TODO not correct
-        return "\n\nPurchaseSequence({}, total_cost:{})".format(str(self.purchases), self.get_total_cost())
+        return "\n\nPurchaseSequence({}, \ntotal_cost:{})".format(str(self.purchases), self.get_total_cost())
 
     def __str__(self):
         return self.__repr__()
