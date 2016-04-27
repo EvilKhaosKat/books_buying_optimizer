@@ -56,6 +56,21 @@ def _get_max_top_cost(top_costs):
         return max(top_costs)
 
 
+def _get_books_from_purchases_list(current_purchase_sequence):
+    books = []
+
+    for purchase in current_purchase_sequence:
+        bought_books = purchase.bought_books
+        if bought_books:
+            books.append(bought_books)
+
+        free_book = purchase.free_book
+        if free_book:
+            books.append(free_book)
+
+    return books
+
+
 def get_purchase_variants(books_list, best_variants_count, current_purchase_sequence=None, purchase_sequences_top=None):
     books_list = books_list[:]  # copy
 
@@ -78,6 +93,7 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
             min_cost = purchase.get_minimum_cost()
 
             leftovers_books = _substract_lists(books_list, books_combination)
+            leftovers_books = _substract_lists(leftovers_books, _get_books_from_purchases_list(current_purchase_sequence))
             free_getting_books = get_books_cost_less_equals(leftovers_books, min_cost)
 
             for free_book in free_getting_books:  # check all free books possible variants
