@@ -62,7 +62,7 @@ def _get_books_from_purchases_list(current_purchase_sequence):
     for purchase in current_purchase_sequence:
         bought_books = purchase.bought_books
         if bought_books:
-            books.append(bought_books)
+            books.extend(bought_books)
 
         free_book = purchase.free_book
         if free_book:
@@ -94,11 +94,7 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
             leftovers_books = _substract_lists(books_list, books_combination)
             from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
-            print("from_purchases_list:%s" % from_purchases_list)
             leftovers_books = _substract_lists(leftovers_books, from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
-
-            print("leftovers_books:%s" % leftovers_books)
-            print("current_purchase_sequence:%s\n" % current_purchase_sequence)
 
             free_getting_books = get_books_cost_less_equals(leftovers_books, min_cost)
 
@@ -120,7 +116,14 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
 
 def _substract_lists(books_list, books_combination):
-    return list(set(books_list) - set(books_combination))
+    books_list = books_list[:]
+
+    for book_to_remove in books_combination:
+        if book_to_remove in books_list:
+            books_list.remove(book_to_remove)
+
+    return books_list
+    #return list(set(books_list) - set(books_combination))
 
 
 class TestHelper(unittest.TestCase):
