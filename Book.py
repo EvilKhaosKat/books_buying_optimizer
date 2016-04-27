@@ -7,7 +7,7 @@ class Book:
         self.cost = cost
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__  # TODO check strictly on title/cost?
+        return self.title == other.title  # TODO check strictly on title/cost?
 
     def __repr__(self):
         return "Book(title='{}', cost={})".format(self.title, self.cost)

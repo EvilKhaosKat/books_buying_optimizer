@@ -93,7 +93,13 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
             min_cost = purchase.get_minimum_cost()
 
             leftovers_books = _substract_lists(books_list, books_combination)
-            leftovers_books = _substract_lists(leftovers_books, _get_books_from_purchases_list(current_purchase_sequence))
+            from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
+            print("from_purchases_list:%s" % from_purchases_list)
+            leftovers_books = _substract_lists(leftovers_books, from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
+
+            print("leftovers_books:%s" % leftovers_books)
+            print("current_purchase_sequence:%s\n" % current_purchase_sequence)
+
             free_getting_books = get_books_cost_less_equals(leftovers_books, min_cost)
 
             for free_book in free_getting_books:  # check all free books possible variants
