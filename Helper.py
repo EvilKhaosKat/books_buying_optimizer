@@ -62,8 +62,11 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
     if not purchase_sequences_top:
         purchase_sequences_top = []
+
     if not current_purchase_sequence:
         current_purchase_sequence = []
+    else:
+        current_purchase_sequence = current_purchase_sequence[:]  # copy
 
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
         # print("add leftovers:%s" % books_list)
