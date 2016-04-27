@@ -74,8 +74,6 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
         for books_combination in books_combinations:  # check all books groups to buy combinations
-            current_purchase_sequence = current_purchase_sequence[:]  # copy
-
             purchase = Purchase(bought_books=books_combination)
             min_cost = purchase.get_minimum_cost()
 
@@ -83,7 +81,6 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
             free_getting_books = get_books_cost_less_equals(leftovers_books, min_cost)
 
             for free_book in free_getting_books:  # check all free books possible variants
-                purchase = copy.deepcopy(purchase)
                 purchase.free_book = free_book
 
                 other_books = leftovers_books[:]
