@@ -89,8 +89,7 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
                 other_books = leftovers_books[:]
                 other_books.remove(free_book)
 
-                current_purchase_sequence = current_purchase_sequence[:]  # copy
-                current_purchase_sequence.append(purchase)
+                current_purchase_sequence.append(purchase)  # TODO problem is here
 
                 purchase_sequences_top = \
                     get_purchase_variants(books_list=other_books,
