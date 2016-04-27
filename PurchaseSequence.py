@@ -1,6 +1,9 @@
 class PurchaseSequence:
     purchases = []
 
+    def __init__(self, purchases):
+        self.purchases = purchases
+
     def add_purchase(self, purchase):
         if not purchase.is_empty_purchase():
             self.purchases.append(purchase)
@@ -16,7 +19,7 @@ class PurchaseSequence:
         return sum(costs)
 
     def __repr__(self):  # TODO not correct
-        return "PurchaseSequence({},\n total_cost:{})".format(str(self.purchases), self.get_total_cost())
+        return "\n\nPurchaseSequence({}, total_cost:{})".format(str(self.purchases), self.get_total_cost())
 
     def __str__(self):
         return self.__repr__()

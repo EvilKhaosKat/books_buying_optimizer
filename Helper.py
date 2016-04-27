@@ -47,7 +47,6 @@ def add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence):
 
     if current_cost < max_top_cost:
         purchase_sequences_top.append(purchase_sequence_obj)
-        print("purchase_sequence_obj:%s" % purchase_sequence_obj)
 
 
 def _get_max_top_cost(top_costs):
@@ -65,17 +64,18 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
     if not current_purchase_sequence:
         current_purchase_sequence = []
-    else:
-        current_purchase_sequence = current_purchase_sequence[:]  # copy
 
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
         # print("add leftovers:%s" % books_list)
         current_purchase_sequence.append(Purchase(bought_books=books_list[:]))
 
-        add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
+        #add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
+        purchase_sequences_top.append(PurchaseSequence(current_purchase_sequence))
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
         for books_combination in books_combinations:  # check all books groups to buy combinations
+            current_purchase_sequence = current_purchase_sequence[:]  # copy
+
             purchase = Purchase(bought_books=books_combination)
             min_cost = purchase.get_minimum_cost()
 
@@ -83,11 +83,13 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
             free_getting_books = get_books_cost_less_equals(leftovers_books, min_cost)
 
             for free_book in free_getting_books:  # check all free books possible variants
+                purchase = copy.deepcopy(purchase)
                 purchase.free_book = free_book
 
                 other_books = leftovers_books[:]
                 other_books.remove(free_book)
 
+                current_purchase_sequence = current_purchase_sequence[:]  # copy
                 current_purchase_sequence.append(purchase)
 
                 purchase_sequences_top = \
