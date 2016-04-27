@@ -40,7 +40,7 @@ def add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence):
 
     current_cost = current_purchase_sequence.get_total_cost()
 
-    top_costs = map(lambda purchase_sequence: purchase_sequence.get_total_cost(), purchase_sequences_top)
+    top_costs = list(map(lambda purchase_sequence: purchase_sequence.get_total_cost(), purchase_sequences_top))
     max_top_cost = _get_max_top_cost(top_costs)
 
     print("current_cost:%s" % current_cost)
