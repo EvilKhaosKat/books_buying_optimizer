@@ -1,6 +1,7 @@
 import json
 import unittest
 import itertools
+import sys
 
 from Book import Book
 from Purchase import Purchase
@@ -52,7 +53,7 @@ def add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence):
 
 def _get_max_top_cost(top_costs):
     if len(top_costs) == 0:
-        return 0
+        return sys.maxsize
     else:
         return max(top_costs)
 
@@ -66,6 +67,7 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
         current_purchase_sequence = PurchaseSequence()
 
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - by as is all of them
+        #print("add leftovers:%s" % books_list)
         current_purchase_sequence.add_purchase(Purchase(bought_books=books_list[:]))
         add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
     else:
