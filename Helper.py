@@ -2,6 +2,7 @@ import json
 import unittest
 import itertools
 import sys
+import copy
 
 from Book import Book
 from Purchase import Purchase
@@ -87,10 +88,11 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
                 current_purchase_sequence.add_purchase(purchase)
 
-                purchase_sequences_top = get_purchase_variants(books_list=other_books,
-                                                               best_variants_count=best_variants_count,
-                                                               current_purchase_sequence=current_purchase_sequence,
-                                                               purchase_sequences_top=purchase_sequences_top)
+                purchase_sequences_top = \
+                    get_purchase_variants(books_list=other_books,
+                                          best_variants_count=best_variants_count,
+                                          current_purchase_sequence=copy.copy(current_purchase_sequence),
+                                          purchase_sequences_top=purchase_sequences_top)
 
     return purchase_sequences_top
 
