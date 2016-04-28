@@ -11,7 +11,7 @@ python 3+
 
 
 ### Plans:
-* json-based interface - *in progress*
+* json-based interface - **implemented**
 * cli
 * web-interface
 * browser plugin (?)
