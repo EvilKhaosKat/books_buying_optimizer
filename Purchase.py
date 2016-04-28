@@ -12,7 +12,8 @@ class Purchase:
         self.free_book = free_book
 
     def __repr__(self):
-        return "\nPurchase(bought_books={}, free_book={})".format(self.bought_books, self.free_book)
+        return "\nPurchase(bought_books={}, free_book={}, get_cost={})".format(
+            self.bought_books, self.free_book, self.get_cost())
 
     def __str__(self):
         return self.__repr__()

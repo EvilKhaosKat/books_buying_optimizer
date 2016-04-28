@@ -103,9 +103,9 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
             min_cost = purchase.get_minimum_cost()
 
             leftovers_books = _substract_lists(books_list, books_combination)
-            from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
-            leftovers_books = _substract_lists(leftovers_books,
-                                               from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
+            #from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
+            #leftovers_books = _substract_lists(leftovers_books,
+            #                                   from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
 
             free_getting_books = list(get_books_cost_less_equals(leftovers_books, min_cost))
 
@@ -126,17 +126,23 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
 
 
 def _substract_lists(books_list, books_combination):
-    books_list = books_list[:]
+    result_books_list = books_list[:]
 
     for book_to_remove in books_combination:
-        if book_to_remove in books_list:
-            books_list.remove(book_to_remove)
+        if book_to_remove in result_books_list:
+            result_books_list.remove(book_to_remove)
 
-    return books_list
+    return result_books_list
     # return list(set(books_list) - set(books_combination))
 
 
 class TestHelper(unittest.TestCase):
+    def test_substract_lists(self):
+        list_1 = [Book(title="Title 1", cost=100), Book(title="Title 2", cost=100), Book(title="Title 3", cost=100)]
+        list_2 = [Book(title="Title 2", cost=100), Book(title="Title 3", cost=100), Book(title="Title 4", cost=100)]
+
+        self.assertListEqual(_substract_lists(list_1, list_2), [Book(title="Title 1", cost=100)])
+
     def test_get_books_less_equals(self):
         suitable_books = \
             [Book(title="title 1", cost=100), Book(title="title 2", cost=200), Book(title="title 3", cost=300)]
