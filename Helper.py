@@ -37,8 +37,8 @@ def get_books_list():
 
 
 def add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence):
-    purchase_sequence_obj = PurchaseSequence()
-    purchase_sequence_obj.purchases = current_purchase_sequence
+    purchase_sequence_obj = PurchaseSequence(current_purchase_sequence)
+    # purchase_sequence_obj.purchases = current_purchase_sequence
 
     current_cost = purchase_sequence_obj.get_total_cost()
 
@@ -71,7 +71,16 @@ def _get_books_from_purchases_list(current_purchase_sequence):
     return books
 
 
-def get_purchase_variants(books_list, best_variants_count, current_purchase_sequence=None, purchase_sequences_top=None):
+def get_purchase_variants(books_list, best_variants_count):
+    variants = _get_purchase_variants(books_list=books_list)
+
+    variants = sorted(variants, key=lambda purchase_sequence: purchase_sequence.get_total_cost(), reverse=False)
+    variants = variants[:best_variants_count]
+
+    return variants
+
+
+def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_sequences_top=None):
     books_list = books_list[:]  # copy
 
     if not purchase_sequences_top:
@@ -82,9 +91,10 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
         # print("add leftovers:%s" % books_list)
+        current_purchase_sequence = current_purchase_sequence[:]
         current_purchase_sequence.append(Purchase(bought_books=books_list[:]))
 
-        #add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
+        # add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
         purchase_sequences_top.append(PurchaseSequence(current_purchase_sequence))
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
@@ -94,9 +104,10 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
 
             leftovers_books = _substract_lists(books_list, books_combination)
             from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
-            leftovers_books = _substract_lists(leftovers_books, from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
+            leftovers_books = _substract_lists(leftovers_books,
+                                               from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
 
-            free_getting_books = get_books_cost_less_equals(leftovers_books, min_cost)
+            free_getting_books = list(get_books_cost_less_equals(leftovers_books, min_cost))
 
             for free_book in free_getting_books:  # check all free books possible variants
                 purchase.free_book = free_book
@@ -104,13 +115,12 @@ def get_purchase_variants(books_list, best_variants_count, current_purchase_sequ
                 other_books = leftovers_books[:]
                 other_books.remove(free_book)
 
-                current_purchase_sequence.append(purchase)  # TODO problem is here
+                modified_purchase_sequence = current_purchase_sequence[:]
+                modified_purchase_sequence.append(purchase)  # TODO problem is here
 
-                purchase_sequences_top = \
-                    get_purchase_variants(books_list=other_books,
-                                          best_variants_count=best_variants_count,
-                                          current_purchase_sequence=current_purchase_sequence[:],
-                                          purchase_sequences_top=purchase_sequences_top)
+                purchase_sequences_top = _get_purchase_variants(books_list=other_books,
+                                                                current_purchase_sequence=modified_purchase_sequence[:],
+                                                                purchase_sequences_top=purchase_sequences_top)
 
     return purchase_sequences_top
 
@@ -123,7 +133,7 @@ def _substract_lists(books_list, books_combination):
             books_list.remove(book_to_remove)
 
     return books_list
-    #return list(set(books_list) - set(books_combination))
+    # return list(set(books_list) - set(books_combination))
 
 
 class TestHelper(unittest.TestCase):
