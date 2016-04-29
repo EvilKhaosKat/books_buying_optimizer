@@ -95,8 +95,6 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
         current_purchase_sequence.append(Purchase(bought_books=books_list[:]))
 
-        # add_in_top_if_suits(purchase_sequences_top, mod_current_purchase_sequence)
-        # purchase_sequences_top.append(PurchaseSequence(current_purchase_sequence))
         return current_purchase_sequence
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
@@ -106,8 +104,7 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
 
             leftovers_books = _substract_lists(books_list, books_combination)
             from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
-            leftovers_books = _substract_lists(leftovers_books,
-                                               from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
+            leftovers_books = _substract_lists(leftovers_books, from_purchases_list)
 
             free_getting_books = list(get_books_cost_less_equals(leftovers_books, min_cost))
 
@@ -126,9 +123,6 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
 
                 if sequence:
                     purchase_sequences_top.append(PurchaseSequence(sequence))
-
-                    # return None
-                    # return None
 
     return None
 
