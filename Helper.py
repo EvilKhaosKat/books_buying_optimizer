@@ -72,7 +72,8 @@ def _get_books_from_purchases_list(current_purchase_sequence):
 
 
 def get_purchase_variants(books_list, best_variants_count):
-    variants = _get_purchase_variants(books_list=books_list)
+    variants = []
+    _get_purchase_variants(books_list=books_list, purchase_sequences_top=variants)
 
     variants = sorted(variants, key=lambda purchase_sequence: purchase_sequence.get_total_cost(), reverse=False)
     variants = variants[:best_variants_count]
@@ -83,19 +84,20 @@ def get_purchase_variants(books_list, best_variants_count):
 def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_sequences_top=None):
     books_list = books_list[:]  # copy
 
-    if not purchase_sequences_top:
-        purchase_sequences_top = []
+    # if not purchase_sequences_top:
+    #    purchase_sequences_top = []
 
     if not current_purchase_sequence:
         current_purchase_sequence = []
 
+    current_purchase_sequence = copy.deepcopy(current_purchase_sequence)
+
     if len(books_list) <= BOUGHT_BOOKS_IN_ONE_PURCHASE:  # leftovers - buy all of them as is
-        # print("add leftovers:%s" % books_list)
-        current_purchase_sequence = current_purchase_sequence[:]
         current_purchase_sequence.append(Purchase(bought_books=books_list[:]))
 
-        # add_in_top_if_suits(purchase_sequences_top, current_purchase_sequence)
-        purchase_sequences_top.append(PurchaseSequence(current_purchase_sequence))
+        # add_in_top_if_suits(purchase_sequences_top, mod_current_purchase_sequence)
+        # purchase_sequences_top.append(PurchaseSequence(current_purchase_sequence))
+        return current_purchase_sequence
     else:
         books_combinations = itertools.combinations(books_list, BOUGHT_BOOKS_IN_ONE_PURCHASE)
         for books_combination in books_combinations:  # check all books groups to buy combinations
@@ -103,9 +105,9 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
             min_cost = purchase.get_minimum_cost()
 
             leftovers_books = _substract_lists(books_list, books_combination)
-            #from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
-            #leftovers_books = _substract_lists(leftovers_books,
-            #                                   from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
+            from_purchases_list = _get_books_from_purchases_list(current_purchase_sequence)
+            leftovers_books = _substract_lists(leftovers_books,
+                                               from_purchases_list)  # TODO for some reasons not all the used books removed - causes problems
 
             free_getting_books = list(get_books_cost_less_equals(leftovers_books, min_cost))
 
@@ -115,14 +117,20 @@ def _get_purchase_variants(books_list, current_purchase_sequence=None, purchase_
                 other_books = leftovers_books[:]
                 other_books.remove(free_book)
 
-                modified_purchase_sequence = current_purchase_sequence[:]
-                modified_purchase_sequence.append(purchase)  # TODO problem is here
+                mod_purchase_sequence = current_purchase_sequence[:]
+                mod_purchase_sequence.append(purchase)  # TODO problem is here
 
-                purchase_sequences_top = _get_purchase_variants(books_list=other_books,
-                                                                current_purchase_sequence=modified_purchase_sequence[:],
-                                                                purchase_sequences_top=purchase_sequences_top)
+                sequence = _get_purchase_variants(books_list=other_books,
+                                                  current_purchase_sequence=mod_purchase_sequence[:],
+                                                  purchase_sequences_top=purchase_sequences_top)
 
-    return purchase_sequences_top
+                if sequence:
+                    purchase_sequences_top.append(PurchaseSequence(sequence))
+
+                    # return None
+                    # return None
+
+    return None
 
 
 def _substract_lists(books_list, books_combination):
